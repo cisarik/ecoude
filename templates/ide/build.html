@@ -1,0 +1,140 @@
+{% extends "idebase.html" %}
+{% block meta %}
+<script type="text/javascript" src="/static/js/javasocketbridge/java_socket_bridge.js"></script>
+{% endblock %}
+{% block extrabody %}
+onload="setTimeout('Start();',1000);"
+{% endblock %}
+{% block content %}
+<script type="text/javascript">
+var failed=false;
+    
+function CancelBack(){
+    window.location = "/ide/{{ problem_id }}/{{ project_id }}";
+}       
+    
+function Back(){
+    window.location = "/ide/{{ problem_id }}/{{ project_id }}?makerunnable=true";
+}       
+
+function ShowBack(){
+    document.getElementById('backbutton').style.visibility="visible";
+}
+    
+function GoAway(){
+    send('cd ../../\n');
+    send('exit\n');
+}   
+
+function Build(){
+    send('{{buildcommand}} {{files}}{{buildparameters}}\n');
+    setTimeout("GoAway()",1000);
+}    
+    
+function Exec(){
+    send('cd {{cd}}\n');
+    setTimeout("Build()",1000);
+}    
+
+function priority(){
+    send('PRIORITY={{priority}}\n');
+}
+
+function on_socket_error(message){
+    if (failed==false){
+        alert("Remote terminal server is not available!");
+        document.getElementById('result').innerHTML += "Connection failed\n";
+        failed=true;
+    }
+}
+    
+function run(){
+    socket_connect('coude.cisary.com', 9000);
+    socket_send("HELLO\n");
+}
+function on_socket_get(message){
+    if (message=="ACCESS_DENY"){
+        document.getElementById('result').innerHTML += "Too many users connected, try launch build later\n";
+        CancelBack();
+    }
+    else
+    if (message=="WAIT"){
+        document.getElementById('result').innerHTML += "Too many users is building theirs projects, waiting..\n";
+    }
+    else
+    if (message=="ACCESS_ALLOW"){
+    }
+    else
+    if (message=="HELLO"){
+        document.getElementById('result').innerHTML += "Connected succesfully\n";
+        setTimeout("priority()",1000);
+        
+    }
+    else
+    if (message=="START"){
+        document.getElementById('result').innerHTML += "Remote terminal launched\n{{buildcommand}} {{files}}{{buildparameters}}\n";
+        setTimeout("Exec()",1000);
+    }
+    else
+    if (message=="DONE"){
+        document.getElementById('result').innerHTML += "Build command finished\n";
+        send('CLOSE\n');
+        socket_disconnect();
+        ShowBack();
+    }
+    else{
+        document.getElementById('result').innerHTML += message+"\n";
+    }
+}
+function send(message){
+    socket_send(message);
+}
+                
+function Load(){
+    if (java_socket_bridge_ready_flag==true) {
+        document.getElementById('result').innerHTML += "Applet loaded\n";
+        run();
+    }
+    else {
+        document.getElementById('result').innerHTML += "Applet not loaded, trying againg!";
+        setTimeout('Load()',1000)
+    }
+}
+
+function Start(){
+    if(!navigator.javaEnabled()){
+        alert('Java is needed, it is probably turned off or not installed!');
+    }
+    else{
+        document.getElementById('result').innerHTML += "Java is installed\n";
+        Load();
+    } 
+}
+</script>
+<div><applet id="JavaSocketBridge" name="JavaSocketBridge" archive="/static/js/javasocketbridge/JavaSocketBridge.jar" code="JavaSocketBridge.class" width="0" height="0"></applet></div>
+<div id="bigide-border">
+<br>
+<fieldset style="border:0px solid grey;color:white;font-size:14px;text-align:center;">
+Build project
+<br>
+<br>
+<div style="color:white;font-weight:bold;">
+<p>
+<textarea id="result" style="width:98%;height:350px; background:white;color:black;float:center;">
+</textarea>
+</p>
+<form action="/ide/{{problem_id}}/{{project_id}}/" method="post" name="sourcecode_form" id="sourcecode_form"> 
+<input id="backbutton" name="backbutton" value="Back" style="visibility:hidden;text-align:center;" onclick="Back();"/>
+</form>
+</fieldset>
+<br>
+<br>
+</div>
+<script type="text/javascript">
+// <![CDATA[
+if (!window.$) {window.$ = function(id) { return document.getElementById(id); }}
+var shadowedBorder    = RUZEE.ShadedBorder.create({ corner:7, shadow:22 });
+shadowedBorder.render('bigide-border');
+// ]]>
+</script>
+{% endblock %}

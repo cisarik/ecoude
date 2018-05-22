@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block meta %}
+<script type="text/javascript" src="/static/js/ste/SimpleTextEditor.js"></script> 
+<link rel="stylesheet" type="text/css" href="/static/css/SimpleTextEditor.css"> 
+<script language="javascript" src="/static/js/datepick/ts_picker.js">//Script by Denis Gritcyuk: tspicker@yahoo.com</script>
+<link rel="stylesheet" type="text/css" href="/static/css/calendar.css"/>
+{% endblock %}
+{% block title %}
+{% endblock %}
+{% block content %}
+<br>
+<div id="titlediv">
+<center>
+Sign-up!
+</center>
+<br>
+</div>
+<fieldset class="todofield">
+<div id="split">
+    <h3><span></span></h3>
+    <div class="content">
+    <p>
+        <center>
+        <form action="/accounts/signup/" method="post">
+        {{ form.as_p }}
+        <input type="submit" value="Register" />
+        </form>
+        </center>
+    </p>
+    </div>
+</div>
+</fieldset>
+<br>
+{% endblock %}
+{% block extrabody %}
+onload="onLoad();" onresize="onResize();" 
+{% endblock %} 
+

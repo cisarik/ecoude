@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<br>
+<div id="titlediv">
+<center>
+Logout
+</center>
+<br>
+</div>
+<br>
+<div class="notice">
+<H4 style="color:white;"><center>You've been logged out<a href="/accounts/login/?next=/" style="float:right;padding-right:10px;">{% trans 'Log in again?' %}</a></center></H4>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+<center>
+<div id="canvas" style="position:relative;width:700px;height:700px;background:white;float:center;">
+</div>
+</center>
+<script type="text/JavaScript">
+var canvasDiv=document.getElementById("canvas");
+var gr = new jsGraphics(canvasDiv);
+var ie=false;
+var col = new jsColor("black");
+var pen = new jsPen(col,1);
+
+canvasDiv.onmousemove = getMouseXY;
+canvasDiv.onclick=drawPoint;
+
+if(document.all)
+  ie=true;
+if (!ie)
+{
+ canvasDiv.captureEvents(Event.MOUSEMOVE)
+ canvasDiv.captureEvents(Event.CLICK)
+}
+
+var mouseX = 0
+var mouseY = 0
+
+function getMouseXY(e)
+{
+  if (ie) 
+  {
+    mouseX = event.clientX + document.body.parentElement.scrollLeft;
+    mouseY = event.clientY + document.body.parentElement.scrollTop;
+  } else { 
+    mouseX = e.pageX
+    mouseY = e.pageY
+  }  
+  if (mouseX < 0){mouseX = 0}
+  if (mouseY < 0){mouseY = 0}  
+  mouseX =mouseX - canvasDiv.offsetLeft;
+  mouseY =mouseY - canvasDiv.offsetTop;
+  return true;
+}
+    
+function drawPoint()
+{
+    gr.fillCircle(col,new jsPoint(mouseX-7,mouseY-7),4);
+    point=new jsPoint(mouseX-3,mouseY-3);
+    var txt=document.getElementById("input");
+    txt.value+=point.x + '\n' + point.y+ '\n\n';
+}
+
+</script>

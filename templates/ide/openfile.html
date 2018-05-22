@@ -1,0 +1,45 @@
+{% extends "idebase.html" %}
+{% block content %}
+<div id="ide-border">
+<br>
+<div class="border">
+<form action="/ide/{{problem_id}}/{{project_id}}/" method="post" name="templateform" id="templateform"> 
+<input type="hidden" name="id" value="{{openedid}}"/>
+<input type="hidden" name="type" value="SourceCodeFile"/>
+<textarea id="code" name="template" >
+{% include openedtemplate %}
+</textarea>
+</form>
+</div>
+<br>
+</div>
+<script type="text/javascript">
+// <![CDATA[
+if (!window.$) {window.$ = function(id) { return document.getElementById(id); }}
+var shadowedBorder    = RUZEE.ShadedBorder.create({ corner:7, shadow:22 });
+shadowedBorder.render('ide-border');
+
+{% ifequal frameworkextension "cs" %}
+  var editor = CodeMirror.fromTextArea('code', {
+    parserfile: ["cs/tokenizecsharp.js", "cs/parsecsharp.js"],
+    stylesheet: "/static/css/csharpcolors.css",
+    path: "/static/js/codemirror/",
+    height: "94%",
+});
+{% endifequal %}
+
+{% ifequal frameworkextension "py" %}
+var editor = CodeMirror.fromTextArea('code', {
+    parserfile: ["py/parsepython.js"],
+    stylesheet: "/static/css/pythoncolors.css",
+    path: "/static/js/codemirror/",
+    textWrapping: false,
+    indentUnit: 4,
+    height: "94%",
+    parserConfig: {'pythonVersion': 2, 'strictErrors': false}
+});
+{% endifequal %}
+
+// ]]>
+</script>
+{% endblock %}

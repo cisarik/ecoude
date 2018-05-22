@@ -1,0 +1,28 @@
+{% extends "idebase.html" %}
+{% block content %}
+<div id="smallide-border">
+<br>
+<div style="color:white;font-weight:bold;">
+        <center>
+        <form action="/ide/{{problem_id}}/{{project_id}}/" method="post" name="templateform" id="templateform"> 
+        <input type="hidden" name="type" value="editTodo"/>
+        <input type="hidden" name="editid" value="{{id}}"/>
+        {{ form.as_p }}
+        {% ifequal editabletodo "True" %}
+        <input type="submit" value="Save" />
+        <input type="button" value="Delete" onclick="document.location.href='/ide/{{problem_id}}/{{project_id}}/?deletetodo=true&id={{id}}';">
+        {% endifequal %}
+        </form>
+        </center>
+</div>
+<br>
+<br>
+</div>
+<script type="text/javascript">
+// <![CDATA[
+if (!window.$) {window.$ = function(id) { return document.getElementById(id); }}
+var shadowedBorder    = RUZEE.ShadedBorder.create({ corner:7, shadow:22 });
+shadowedBorder.render('smallide-border');
+// ]]>
+</script>
+{% endblock %}

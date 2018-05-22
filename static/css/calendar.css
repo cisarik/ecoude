@@ -1,0 +1,7 @@
+.month, .nav{background-color: #979797;font-weight: bold; font: 15px sans-serif;color: white; }
+.nav{cursor: pointer;}
+.dayHeader{color: white;font: 10pt sans-serif;border-bottom: 1px black solid;font-weight: bold;}
+.empty{background-color: black;border-bottom: 1px black solid;}
+.days{color: white;background-color:#1c1c1c;font: 10px sans-serif;border-bottom: 1px black solid;border-left: 1px black solid;border-right: 1px black solid;cursor: pointer;}
+.date{color: white;font: 12pt sans-serif;padding-left:3px;font-weight: bold;border-bottom: 1px black solid;border-left: 1px black solid;border-right: 1px black solid;cursor: pointer;}
+}

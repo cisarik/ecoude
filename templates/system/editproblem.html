@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block meta %}
+<script type="text/javascript" src="/static/js/ste/SimpleTextEditor.js"></script> 
+<link rel="stylesheet" type="text/css" href="/static/css/SimpleTextEditor.css"> 
+<script language="javascript" src="/static/js/datepick/ts_picker.js">//Script by Denis Gritcyuk: tspicker@yahoo.com</script>
+<link rel="stylesheet" type="text/css" href="/static/css/calendar.css"/>
+{% endblock %}
+{% block title %}
+{% endblock %}
+{% block content %}
+{% for id,title,description,template,tags in problems %}
+<div id="titlediv">
+<center>
+Edit Problem
+</center>
+<a href="/problems/" style="float:left;">
+<img src="/static/images/system/back.png" class="imglink" onmouseover="this.src='/static/images/system/back1.png'" onmouseout="this.src='/static/images/system/back.png';">
+</a><br>
+<a href="/problem/{{id}}?delete=true" style="float:right;">delete</a>
+<br>
+</div>
+<form name="article" action="/problem/{{id}}" method="POST"> 
+<fieldset class="todofield">
+<a href="/" class="greyleft2"></a>
+<br>
+<div style="float:left; z-index:3;margin:0px 0px 0px 5px;color:white;"><b>Title:</b><input type="text" size="44" name="title" style="float:right; margin:0px 20px 0px 20px; border:none;" value="{{title}}"></div>
+<div style="float:left;z-index:3;color:white;"><b style="margin-right:25px;">Tags :</b><input type="text" name="tags"  style="border:none;margin:0px 0px 0px 0px;float:right;" value="{{tags}}"></div>
+<div style="float:left;z-index:3;color:white;"><b style="margin-left:25px;">Description:</b><input type="text" size="488" style="float:right;margin:0px 20px 0px 20px;border:none;" name="description" value="{{description}}"></div>
+<br><br>
+<textarea id="textarea" name="body" >
+{% include template %}
+</textarea> 
+<script type="text/javascript"> 
+var ste = new SimpleTextEditor("textarea", "ste");
+ste.cssFile = '/static/css/article.css';
+ste.charset = 'iso-8859-2';
+ste.init();
+</script> 
+<center>
+<input type="submit" value="Save" onclick="ste.submit();"> 
+<input type="hidden" name="type" value="editProblem"/>
+<input type="hidden" name="template" value="{{template}}"/>
+<br><br>
+</center>
+</fieldset>
+</form>
+</fieldset>
+<br>
+{% endfor %}
+{% endblock %}
+{% block extrabody %}
+onload="onLoad();" onresize="onResize();" 
+{% endblock %} 
+

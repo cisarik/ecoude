@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}About Ecoude{% endblock %}
+{% block meta %}
+<script src="/static/js/jsdraw2d/jsDraw2D.js" type="text/javascript"></script> 
+{% endblock %}    
+{% block content %}
+<br>
+<a href="/solution/{{inputfile_id}}/{{framework_id}}">
+<img src="/static/images/system/back.png" class="imglink" onmouseover="this.src='/static/images/system/back1.png'" onmouseout="this.src='/static/images/system/back.png';">
+</a>
+<div id="titlediv">
+<center>
+Solution with fitness {{fitness}}:
+</center>
+<br>
+{% include template %}
+</div>
+<br>
+
+
+</fieldset>
+<br>
+{% endblock %}

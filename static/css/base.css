@@ -1,0 +1,57 @@
+html { font-family:Arial, sans-serif; background:#444; color:#ddd; }
+html, body { margin:0; padding:0; }
+p { margin:5px 0; }
+.headfoot { text-align:right; padding:10px; margin:0; position:relative; }
+.headfoot h1 { font-size:1.3em; padding:0; margin:0; }
+.headfoot a { color:#fff; }
+#content { background:url(back.jpg); padding:10px 0; }
+* html #content { position:relative; }
+
+/* For the first shadowed border */
+#shadowed-border { padding:20px; width:80%; margin:20px auto; color:#fff; }
+#shadowed-border, #shadowed-border .sb-inner { background:#444 url(grad.png) repeat-x; }
+
+/* The split heading/content element */
+#split { margin:20px auto; width:33%; }
+#split h3 { padding:4px; text-align:center; margin:0; color:#fff; }
+#split h3, #split h3 .sb-inner { background:#222 url(grad2.png) repeat-x; }
+#split h3 span { display:block; }
+#split .content { padding:4px 10px; color:#444; }
+#split .content, #split .content .sb-inner { background:#ddd url(grad3.png) repeat-x; }
+
+#trans-border { width:280px; margin:20px auto; padding:14px 20px; background:#444; color:#222; }
+#trans-border .sb-border { background:#000; }
+
+/* Partial stuff */
+ul#partial { overflow:hidden; width:490px; margin:20px auto; padding:0; list-style:none; }
+* html ul#partial { height:1%; }
+ul#partial li { float:left; width:50px; padding:12px 0; text-align:center;
+                margin:0 5px; color:#4c2; }
+ul#partial li, ul#partial li .sb-inner { background:#444; }
+ul#partial li .sb-border { background:#fff; }
+
+/* The tabs */
+#tabs { overflow:hidden; padding:0; margin:20px auto 0 auto; width:400px; color:#444; }
+* html #tabs { height:1%; }
+#tabs li { float:left; color:#000; list-style:none; padding:0; margin:0 0 0 5px; }
+* html #tabs li { display:inline-block; }
+#tabs li a { display:block; float:left; text-decoration:none; padding:5px; color:#000; }
+#tabs li, #tabs li .sb-inner { background:#ccc; }
+#tabs li:hover, #tabs li:hover .sb-inner { background:#eee; }
+#tabs li.hover, #tabs li.hover .sb-inner { background:#eee; } /* for ie6 */
+#tabs li .sb-border { background:#fff; }
+#tabs-content { background:#ccc; width:380px; margin:-1px auto 20px auto; padding:10px; 
+                border:1px solid #fff; color:#000; }
+
+/* The links */
+#links { color:#4c2; padding:20px; margin:20px; width:400px; margin:0 auto; }
+#links, #links .sb-inner { background:#444 url(grad.png) repeat-x; }
+#links .sb-border { background:#fff; }
+#links a { color:#9f2; }
+#links a .sb-shadow { background:transparent; }
+#links a:hover .sb-shadow { background:#777; }
+#links a.hover .sb-shadow { background:#777; } /* for ie6 */
+
+#change-border { color:#fff; padding:20px; margin:20px auto; width:300px; }
+.change-border0, .change-border0 .sb-inner { background:#444; }
+.change-border1, .change-border1 .sb-inner { background:#888; }

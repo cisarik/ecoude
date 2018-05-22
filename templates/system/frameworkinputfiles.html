@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ cat_title }}{% endblock %}
+{% block meta %}
+{% endblock %}
+{% block content %}
+<br>
+<div id="editorlink">
+<div id="titlediv">
+{{cat_title}}
+</div>
+</div>
+<H2 class="greyleft2">Input Files used in projects of {{frameworkname}} to solve {{problemtitle}} problem:</H2>
+<fieldset class="linkfield">
+<fieldset class="ideafield">
+
+<ul class="ulfield">
+{% for id,i in inputfiles %}
+<li>
+<a href="/solution/{{id}}/{{frameworkid}}">{{id}}.in</a>
+</li>
+{% endfor %}
+</ul>
+</fieldset>
+
+</fieldset>
+<br>
+{% endblock %}
+

@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block meta %}
+<script type="text/javascript" src="/static/js/ste/SimpleTextEditor.js"></script> 
+<link rel="stylesheet" type="text/css" href="/static/css/SimpleTextEditor.css"> 
+<script src="/static/js/calendar.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/static/css/calendar.css"/>
+{% ifequal timeline "True" %}
+{% include "timeline.html" %}
+  Timeline.loadXML("/static/xml/problems.xml", function(xml, url) { eventSource.loadXML(xml, url); });
+}
+</script>
+{% endifequal %}
+{% endblock %}
+
+{% block title %}
+{% ifequal logged "True" %}
+Welcome {{ user }}
+{% else %}
+Log-in please
+{% endifequal %}
+{% endblock %}
+{% block content %}
+<br>
+<div id="editorlink">
+<div id="titlediv">
+All Problems
+<br>
+<br>
+</div>
+</div>
+{% ifequal timeline "True" %}
+{% include "calendar.html" %}
+{% endifequal %}
+<br>
+<form name="article" action="/problems/" method="POST"> 
+
+<fieldset class="todofield">
+<a href="#" onclick="Effect.toggle('d4','appear'); return false;" style="text-align:right;float:right;height:17px;display: block;">
+Sort
+<img src="/static/images/system/oldest1.png" style="border:none;padding:0px 0px 0px 0px;margin:5px 7px 0px 0px;"/>
+</a>
+<div id="d4" style="display:none;z-index:6;">
+<table style="float:right;z-index:6;">
+<tr>
+<td style="width:100px;color:white;font-weight: bold;text-align:right;">
+By date:
+</td>
+<td style="width:85px;">
+<a href="/problems/?sort=idasc" style="float:right;">
+Newest
+<img src="/static/images/system/newest.png" class="imglink" onmouseover="this.src='/static/images/system/newest1.png'" onmouseout="this.src='/static/images/system/newest.png';">
+</a>
+<td style="width:85px;">
+<a href="/problems/?sort=iddesc"style="float:right;">
+Oldiest
+<img src="/static/images/system/oldest.png" class="imglink" onmouseover="this.src='/static/images/system/oldest1.png'" onmouseout="this.src='/static/images/system/oldest.png';">
+</a>
+<td style="width:85px;color:white;font-weight: bold;text-align:right;">
+By title:
+</td>
+<td style="width:50px;">
+<a href="/problems/?sort=titleasc" style="float:right;">
+A
+<img src="/static/images/system/newest.png" class="imglink" onmouseover="this.src='/static/images/system/newest1.png'" onmouseout="this.src='/static/images/system/newest.png';">
+</a>
+<td style="width:50px;">
+<a href="/problems/?sort=titledesc"style="float:right;">
+Z
+<img src="/static/images/system/oldest.png" class="imglink" onmouseover="this.src='/static/images/system/oldest1.png'" onmouseout="this.src='/static/images/system/oldest.png';">
+</a>
+</td>
+</tr>
+</table>
+</div>
+<br><br>
+{% for a,b,c,x,y,d,e,f,g,h in problems %}
+<h2 class="greyleft2">
+<a href="#" onclick="javascript:window.open('/ide/{{a}}/0?projects=true&opened=false', '_blank','top=100, left=100, height=770, width=800, status=no, menubar=no, resizable=no, scrollbars=no, toolbar=no, location=no, directories=no');">
+<img style="border:none;margin-left:10px;margin-right:20px;padding-top:3px;" align=left src="/static/images/icons/event.png">{{y}}
+</a>
+<small style="color:lightgrey;">{{x}}</small>
+<br>
+<a href="/problem/{{a}}">
+Notes:{{e}} Links:{{f}} Ideas:{{g}} Todos:{{h}}</a></h2>
+<br><br><br>
+{% endfor %}
+<div id="linkdiv"><a href="#" onclick="Effect.toggle('d3','appear'); return false;" style="width:100%;height:17px;display: block;">Add Problem</a></div>
+<div id="d3" style="display:none;">
+<br>
+<div style="float:left; z-index:3;margin:0px 0px 0px 5px;color:white;"><b>Title :</b><input type="text" size="44" name="title" style="float:right; margin:0px 20px 0px 20px; border:none;" </div>
+<div style="float:left;z-index:3;color:white;"><b style="margin-right:25px;">Tags :</b><input id="ac6"type="text" name="tags" autocomplete="off" style="border:none;margin:0px 0px 0px 0px;float:right;"></div>
+<div id="ac6update" style="float:right;display:none;border:2px solid black;background-color:black;height:70px;overflow-y: hidden; font-color:white;font-size:12px; font-family: Arial, Helvetica, sans-serif;z-index:3;"></div> 
+
+<div style="float:left;z-index:3;color:white;"><b style="margin-left:25px;">Description:</b><input type="text" size="200" style="float:right;margin:0px 20px 0px 20px;border:none;width: 200px;background: #FFF url(/static/images/system/input.png) repeat-x top left;border:none; font-size: 11px; padding: 3px; display: block; color:black;" name="description"></div>
+<br>
+<br><br>
+<center>
+<textarea id="addproblem" name="body" >
+</textarea> 
+<script type="text/javascript"> 
+var ste = new SimpleTextEditor("addproblem", "ste");
+ste.cssFile = '/static/css/article.css';
+ste.charset = 'iso-8859-1';
+ste.init();
+</script> 
+<input type="submit" value="submit" onclick="ste.submit();"> 
+<input type="hidden" name="type" value="Problem"/>
+<br><br>
+</center>
+</fieldset>
+</form>
+
+<br>
+{% endblock %}
+{% block extrabody %}
+{% ifequal timeline "True" %}
+onload="onLoad();" onresize="onResize();" 
+{% endifequal %}
+{% endblock %} 
+

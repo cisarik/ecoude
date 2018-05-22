@@ -1,0 +1,9 @@
+/static/CACHE/
+/cache
+*.pyc
+*.mo
+DS_Store
+.DS_Store
+/venv
+/project.db
+/media/*

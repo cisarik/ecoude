@@ -1,0 +1,73 @@
+<center><div id="canvas" style="position:relative;width:700px;height:720px;background:white"></div></center>
+
+<script type="text/JavaScript">
+    
+var canvasDiv=document.getElementById("canvas");
+var gr = new jsGraphics(canvasDiv);
+var ie=false;
+var col = new jsColor("black");
+var pen = new jsPen(col,1);
+
+var x=0;
+for(x=0;x<34;x++)
+{
+    gr.drawLine(pen,new jsPoint(x*20+20,20),new jsPoint(x*20+20,700));
+}
+var y=0;
+for(y=0;y<35;y++)
+{
+    gr.drawLine(pen,new jsPoint(20,20+y*20),new jsPoint(680,20+y*20));
+}
+
+canvasDiv.onmousemove = getMouseXY;
+canvasDiv.onclick=drawPoint;
+
+if(document.all)
+  ie=true;
+if (!ie)
+{
+ canvasDiv.captureEvents(Event.MOUSEMOVE)
+ canvasDiv.captureEvents(Event.CLICK)
+}
+
+var mouseX = 0
+var mouseY = 0
+
+function getMouseXY(e)
+{
+  if (ie) 
+  {
+    mouseX = event.clientX + document.body.parentElement.scrollLeft;
+    mouseY = event.clientY + document.body.parentElement.scrollTop;
+  } else { 
+    mouseX = e.pageX
+    mouseY = e.pageY
+  }  
+  if (mouseX < 0){mouseX = 0}
+  if (mouseY < 0){mouseY = 0}  
+  mouseX =mouseX - canvasDiv.offsetLeft;
+  mouseY =mouseY - canvasDiv.offsetTop;
+  return true;
+}
+    
+function drawPoint()
+{
+    var x=Math.round(parseInt(mouseX/20)-1);
+    var y=Math.round(parseInt(mouseY/20)-1);
+    if ((x<0) || (x>33) || (y<0) || (y>34))
+    {
+    }
+    else
+    {
+        gr.fillRectangle(new jsColor("red"),new jsPoint(26+x*20,26+y*20),9,9);
+        var txt=document.getElementById("input");
+        txt.value+=x + '\n' + y+ '\n\n';
+    }
+    
+    point=new jsPoint(mouseX-3,mouseY-3);
+    
+}
+
+</script>
+
+

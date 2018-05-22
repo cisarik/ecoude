@@ -1,0 +1,164 @@
+<table style="float:left;margin: 0px 0px 0px 0px; padding:0px 0px 0px 0px; width:100%;">
+<tr style="margin: 0px 0px 0px 0px; padding:0px 0px 0px 0px;">
+<td style="background: url(/static/images/system/background.png) repeat-x;margin: 0px 0px 0px 0px; padding:0px 0px 0px 0px;"> 
+<a href="/"><img style=border:none; src="/static/images/system/titlehome.jpg"  align="left">
+<p id="title_home_title" style="text-decoration:none;margin-left:3px;margin-right:13px;float:left;color:white;font-weight:bold;
+    font-size:16px; font-family: Arial, Helvetica, sans-serif;">Ecoude</p></a>
+
+<script type="text/javascript">
+    function evalResponse(response) {
+        var json=JSON.parse(response.responseText);
+        if (json.error != null) {
+            alert('Error : Remote JSON server failure!');
+        }
+        else {
+            eval(json.result);
+        }
+    }
+    
+    function RPC(m,p) {
+        new Ajax.Request('/rpc', {method: 'post',parameters:{method:m, params:p, id:1},onComplete: evalResponse});
+    }
+    
+    function toggle(element) {
+        $(element).addClassName('TOGGLED');
+    }
+    
+    function untoggle(element) {
+        $(element).removeClassName('TOGGLED');
+    }
+    
+    function onoff(element) {
+        if (!$(element).hasClassName('TOGGLED')) {
+            toggle(element);
+            new Effect.toggle($(element), 'appear',{ duration: 0.3 });
+        }
+        else {
+            untoggle(element);
+            new Effect.toggle($(element), 'appear',{ duration: 0.3 });
+        }
+    }
+    
+    function refresh(element,html) {
+        toggle(element);
+        $(element).replace(html);
+    }
+    
+</script>
+
+<div style="float:left;">
+<ul class="menu" id="menu">
+    
+    {% ifequal user "admin" %}
+    <li><a href="javascript:rpc('plus',['a','b']);" class="menulink">Administration</a>
+        <ul>
+            <li><a href="javascript:RPC('admin_shellserver_refresh',[]);">Shellserver</a></li>
+            <li>
+                <a href="#" class="sub">Chat</a>
+                <ul>
+                    <li class="topline"><a href="#">Users</a></li>
+                    <li><a href="#">Rooms</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="sub">System</a>
+                <ul>
+                    <li class="topline"><a href="#">Memory</a></li>
+                    <li>
+                        <a href="#" class="sub">Logs</a>
+                        <ul>
+                            <li class="topline"><a href="#">django.log</a></li>
+                            <li><a href="#">shellserver.log</a></li>
+                            <li><a href="#">ecoude_ajax.log</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    {% endifequal %}
+            <li><a href="#" class="menulink">Projects</a>
+                <ul>
+                    <li><a href="#">A</a></li>
+                    <li>
+                        <a href="#" class="sub">Navigation Item 2</a>
+                        <ul>
+                            <li class="topline"><a href="#">Navigation Item 1</a></li>
+                            <li><a href="#">Navigation Item 2</a></li>
+                            <li><a href="#">Navigation Item 3</a></li>
+                            <li><a href="#">Navigation Item 4</a></li>
+                            <li><a href="#">Navigation Item 5</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" class="sub">Navigation Item 3</a>
+                        <ul>
+                            <li class="topline"><a href="#">Navigation Item 1</a></li>
+                            <li><a href="#">Navigation Item 2</a></li>
+                            <li>
+                                <a href="#" class="sub">Navigation Item 3</a>
+                                <ul>
+                                    <li class="topline"><a href="#">Navigation Item 1</a></li>
+                                    <li><a href="#">Navigation Item 2</a></li>
+                                    <li><a href="#">Navigation Item 3</a></li>
+                                    <li><a href="#">Navigation Item 4</a></li>
+                                    <li><a href="#">Navigation Item 5</a></li>
+                                    <li><a href="#">Navigation Item 6</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="#">Navigation Item 4</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Navigation Item 4</a></li>
+                    <li><a href="#">Navigation Item 5</a></li>
+                </ul>
+            </li>
+            <li><a href="#" class="menulink">Non-Dropdown</a></li>
+            <li>
+                <a href="#" class="menulink">Dropdown Two</a>
+                <ul>
+                    <li><a href="#">Navigation Item 1</a></li>
+                    <li>
+                        <a href="#" class="sub">Navigation Item 2</a>
+                        <ul>
+                            <li class="topline"><a href="#">Navigation Item 1</a></li>
+                            <li><a href="#">Navigation Item 2</a></li>
+                            <li><a href="#">Navigation Item 3</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#" class="menulink">Dropdown Three</a>
+                <ul>
+                    <li><a href="#">Navigation Item 1</a></li>
+                    <li><a href="#">Navigation Item 2</a></li>
+                    <li><a href="#">Navigation Item 3</a></li>
+                    <li><a href="#">Navigation Item 4</a></li>
+                    <li><a href="#">Navigation Item 5</a></li>
+                    <li>
+                        <a href="#" class="sub">Navigation Item 6</a>
+                        <ul>
+                            <li class="topline"><a href="#">Navigation Item 1</a></li>
+                            <li><a href="#">Navigation Item 2</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Navigation Item 7</a></li>
+                    <li><a href="#">Navigation Item 8</a></li>
+                    <li><a href="#">Navigation Item 9</a></li>
+                    <li><a href="#">Navigation Item 10</a></li>
+                </ul>
+            </li>
+        </ul>
+</div>
+<p style="float:right;margin-right:25px;font-weight:bold;color:black;font-size:15px; font-family: Arial, Helvetica, sans-serif;">Ecoude - Evolutionary computing online by united development enviroment</p>
+
+<script type="text/javascript">
+	var menu=new menu.dd("menu");
+	menu.init("menu","menuhover");
+</script>
+
+
+</td>
+</tr>
+</table>

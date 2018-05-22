@@ -1,0 +1,48 @@
+
+
+h1 {
+  font-size: 22pt;
+}
+
+.underline {
+  border-bottom: 3px solid #C44;
+}
+
+h2 {
+  font-size: 14pt;
+}
+
+h3 {
+  font-size: 12pt;
+}
+
+p.rel {
+
+
+}
+
+div.border {
+  border: 1px solid black;
+  background-color: white;
+  margin-right:4%;
+  height:96%;
+  margin-bottom:10px;
+}
+
+code {
+  font-family: courier, monospace;
+  font-size: 90%;
+  color: #144;
+}
+
+pre.code {
+  margin: 1.1em 12px;
+  border: 1px solid #CCCCCC;
+  color: black;
+
+  font-family: courier, monospace;
+}
+
+.warn {
+  color: #C00;
+}

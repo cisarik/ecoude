@@ -1,0 +1,39 @@
+{% extends "idebase.html" %}
+{% block content %}
+<div id="smallide-border">
+<br>
+<fieldset style="border:0px solid grey;color:white;font-size:14px;text-align:center;">
+New Project
+<br>
+<div style="color:white;font-weight:bold;">
+<p>
+<center>
+<form action="/ide/{{problem_id}}/0/" method="post">
+<input type="hidden" name="type" value="Project"/>
+Title:
+<input type="text" name="title">
+<br>
+Framework:
+<select name="framework">
+{% for id,name in frameworks %}
+<option value="{{ id }}">{{ name }}</option>
+{% endfor %}
+</select>
+<br>
+<br>
+<input type="submit" value="Create" />
+</form>
+</center>
+</p>
+</div>
+</fieldset>
+<br>
+</div>
+<script type="text/javascript">
+// <![CDATA[
+if (!window.$) {window.$ = function(id) { return document.getElementById(id); }}
+var shadowedBorder    = RUZEE.ShadedBorder.create({ corner:7, shadow:22 });
+shadowedBorder.render('smallide-border');
+// ]]>
+</script>
+{% endblock %}

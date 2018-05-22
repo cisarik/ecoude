@@ -1,0 +1,25 @@
+{% extends "idebase.html" %}
+{% block content %}
+<div id="smallide-border">
+<br>
+<fieldset style="border:0px solid grey;color:white;font-size:14px;text-align:center;">
+Input:
+<br>
+<br>
+<div style="color:white;font-weight:bold;">
+<p>
+<textarea style="width:98%;height:300px; background:white;color:black;float:center;">
+{{testinput}}
+</textarea>
+</p>
+</fieldset>
+<br>
+</div>
+<script type="text/javascript">
+// <![CDATA[
+if (!window.$) {window.$ = function(id) { return document.getElementById(id); }}
+var shadowedBorder    = RUZEE.ShadedBorder.create({ corner:7, shadow:22 });
+shadowedBorder.render('smallide-border');
+// ]]>
+</script>
+{% endblock %}

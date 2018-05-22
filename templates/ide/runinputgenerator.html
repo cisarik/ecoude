@@ -1,0 +1,14 @@
+{% extends "idebase.html" %}
+{% block content %}
+<form action="/ide/{{problem_id}}/{{project_id}}/" method="post" style="display:none;" name="inputform" id="inputform">
+<input type="hidden" name="type" value="runInputGeneratorFile"/>
+<input type="hidden" name="rund" value="{{rund}}"/>
+<input type="hidden" name="fileid" value="{{fileid}}"/>
+<textarea id="input" name="input">
+</textarea>
+</form>
+<div style="height:30px;">
+</div>
+{% include template %}
+
+{% endblock %}

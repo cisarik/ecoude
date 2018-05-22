@@ -1,0 +1,319 @@
+{% extends "base.html" %}
+{% block title %}Note content{% endblock %}
+{% block meta %}
+<script src="/static/js/calendar.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/static/css/calendar.css"/>
+<script type="text/javascript">
+function changeDivContent( nameOfDiv, newContent )
+{
+var div = document.getElementById( nameOfDiv );
+if( div )
+{
+div.innerHTML = newContent;
+}
+}
+var resizeTimerID = null;
+function onResize() {
+    if (resizeTimerID == null) {
+        resizeTimerID = window.setTimeout(function() {
+            resizeTimerID = null;
+            tl.layout();
+        }, 500);
+    }
+}
+function confirmation() {
+	var answer = confirm("Do you really want to delete note {{ note_title }} ?")
+	if (answer){
+		window.location = "/note/{{id}}?delete=true";
+	}
+	else{
+	}
+}
+</script>
+{% ifequal timeline "True" %}
+{% include "timeline.html" %}
+  Timeline.loadXML("/static/xml/note.{{id}}.xml", function(xml, url) { eventSource.loadXML(xml, url); });
+}
+</script>
+{% endifequal %}
+{% endblock %}
+{% block content %}
+{% ifequal timeline "True" %}
+<br>
+{% include "calendar.html" %}
+{% endifequal %}
+{% ifequal edit "True" %}
+<br>
+<br>
+<div id="split">
+    <h3><span>{{ formheader }}</span></h3>
+    <div class="content">
+    <p>
+        <form action="/note/{{id}}" method="post">
+        <input type="hidden" name="edit" value="{{ formheader }}"/> 
+        <input type="hidden" name="editid" value="{{ editid }}"/>
+        <input type="hidden" name="edittype" value="{{ edittype }}"/>
+        
+        {{ editform.as_p }}
+        {% ifequal editableedit "True" %}
+        <input type="submit" value="Edit" />
+        <input type="button" value="Delete" onclick="document.location.href='/note/{{id}}?editdelete=true&editid={{editid}}&edittype={{edittype}}';">
+        {% else %}
+        {% endifequal %}
+        </form>
+    </p>
+    </div>
+</div>
+{% else %}
+{% endifequal %}
+<a href="/problem/{{problem_id}}">
+<img src="/static/images/system/back.png" class="imglink" onmouseover="this.src='/static/images/system/back1.png'" onmouseout="this.src='/static/images/system/back.png';">
+</a>
+<a href="/version/{{version_id}}" style="margin-left:10px;margin-bottom:4px;">{{version}}</a>
+<div style="color:white;margin-left:10px;margin-right-10px;">
+</div>
+<div id="titlediv"></div>
+<div id="editorlink">
+<div id="titlediv">
+{{ note_title }}
+<a href="#"  onclick="confirmation()" style="float:right;">delete</a>
+<a href="#" onclick="Effect.toggle('d5','appear'); return false;" style="foat:right;">edit</a>
+<div id="d5" style="display:none;">
+<div style="color:white;float:right;">
+    <p>
+        <form action="/note/{{id}}" method="POST">
+        <input type="hidden" name="edit" value="True"/> 
+        <input type="hidden" name="id" value="{{id}}"/> 
+        {{ form5.as_p }}
+        <input type="submit" value="Edit"/>
+        </form>
+    </p>
+</div>
+</div>
+</div>
+</div>
+<h4 style="color:white;margin-left:12px;">Tags:</h4>
+<fieldset class="debugfield">
+<img src="/static/images/system/whitetag.gif" align=left>
+</b>
+{% for id,tag in tags %}
+<div id="tagdiv">
+<a href="/tag/{{id}}">{{tag}}</a></div>
+<img src="/static/images/system/whitetag.gif" align=left>
+{% endfor %}
+<br>
+<div id="linkdiv"><a href="#" onclick="Effect.toggle('d4','appear'); return false;" style="width:100%;height:17px;display: block;float:left;">Add Tag</a></div>
+<div id="d4" style="display:none;">
+<div style="color:white;font-weight:bold;">
+    <p>
+        <form action="/note/{{id}}" method="POST">
+        <input type="hidden" name="type" value="Tag"/> 
+        {{ form4.as_p }}
+        <input type="submit" value="Add" />
+        </form>
+    </p>
+</div>
+</div>
+</fieldset>
+<br>
+<br>
+<H2 class="greyleft2">Todos:</H2>
+<fieldset class="linkfield">
+<fieldset class="todofield">
+<a href="#" onclick="Effect.toggle('d7','appear'); return false;" style="text-align:right;float:right;height:17px;display: block;">
+Sort
+<img src="/static/images/system/oldest1.png" style="border:none;padding:0px 0px 0px 0px;margin:5px 7px 0px 0px;"/>
+</a>
+<div id="d7" style="display:none;z-index:6;">
+<table style="float:right;z-index:6;">
+<tr>
+<td style="width:100px;color:white;font-weight: bold;text-align:right;">
+By date:
+</td>
+<td style="width:85px;">
+<a href="?sort=idasc" style="float:right;">
+Newest
+<img src="/static/images/system/newest.png" class="imglink" onmouseover="this.src='/static/images/system/newest1.png'" onmouseout="this.src='/static/images/system/newest.png';">
+</a>
+<td style="width:85px;">
+<a href="?sort=iddesc"style="float:right;">
+Oldiest
+<img src="/static/images/system/oldest.png" class="imglink" onmouseover="this.src='/static/images/system/oldest1.png'" onmouseout="this.src='/static/images/system/oldest.png';">
+</a>
+<td style="width:85px;color:white;font-weight: bold;text-align:right;">
+By title:
+</td>
+<td style="width:50px;">
+<a href="?sort=titleasc" style="float:right;">
+A
+<img src="/static/images/system/newest.png" class="imglink" onmouseover="this.src='/static/images/system/newest1.png'" onmouseout="this.src='/static/images/system/newest.png';">
+</a>
+<td style="width:50px;">
+<a href="?sort=titledesc"style="float:right;">
+Z
+<img src="/static/images/system/oldest.png" class="imglink" onmouseover="this.src='/static/images/system/oldest1.png'" onmouseout="this.src='/static/images/system/oldest.png';">
+</a>
+</td>
+</tr>
+</table>
+</div>
+<ul class="ulfield">
+{% for u,t,s,v,x,y in todos %}
+<li>
+<a href="/note/{{id}}?edit=true&todo=true&id={{u}}">{{t}}</a> - <b>{{v}}</b><br>{{y}}<br> 
+</li>
+<br>
+{% endfor %}
+</ul>
+<br>
+</fieldset>
+<div id="linkdiv"><a href="#" onclick="Effect.toggle('d1','appear'); return false;" style="width:100%;height:17px;display: block;">Add Todo</a></div>
+<div id="d1" style="display:none;">
+<div style="color:white;font-weight:bold;">
+    <p>
+        <center>
+        <form action="/note/{{id}}" method="post">
+        <input type="hidden" name="type" value="Todo"/>
+        {{ form.as_p }}
+        <input type="submit" value="Add" />
+        </form>
+        </center>
+    </p>
+</div>
+</div> 
+</fieldset>
+<br><br>
+<H2 class="greyleft2">Ideas:</H2>
+<fieldset class="todofield">
+<fieldset class="ideafield">
+<a href="#" onclick="Effect.toggle('d6','appear'); return false;" style="text-align:right;float:right;height:17px;display: block;">
+Sort
+<img src="/static/images/system/oldest1.png" style="border:none;padding:0px 0px 0px 0px;margin:5px 7px 0px 0px;"/>
+</a>
+<div id="d6" style="display:none;z-index:6;">
+<table style="float:right;z-index:6;">
+<tr>
+<td style="width:100px;color:white;font-weight: bold;text-align:right;">
+By date:
+</td>
+<td style="width:85px;">
+<a href="?sort2=idasc" style="float:right;">
+Newest
+<img src="/static/images/system/newest.png" class="imglink" onmouseover="this.src='/static/images/system/newest1.png'" onmouseout="this.src='/static/images/system/newest.png';">
+</a>
+<td style="width:85px;">
+<a href="?sort2=iddesc"style="float:right;">
+Oldiest
+<img src="/static/images/system/oldest.png" class="imglink" onmouseover="this.src='/static/images/system/oldest1.png'" onmouseout="this.src='/static/images/system/oldest.png';">
+</a>
+<td style="width:85px;color:white;font-weight: bold;text-align:right;">
+By title:
+</td>
+<td style="width:50px;">
+<a href="?sort2=titleasc" style="float:right;">
+A
+<img src="/static/images/system/newest.png" class="imglink" onmouseover="this.src='/static/images/system/newest1.png'" onmouseout="this.src='/static/images/system/newest.png';">
+</a>
+<td style="width:50px;">
+<a href="?sort2=titledesc"style="float:right;">
+Z
+<img src="/static/images/system/oldest.png" class="imglink" onmouseover="this.src='/static/images/system/oldest1.png'" onmouseout="this.src='/static/images/system/oldest.png';">
+</a>
+</td>
+</tr>
+</table>
+</div>
+<ul class="ulfield">
+{% for u,t,s,v,x,y in ideas %}
+<li>
+<a href="/note/{{id}}?edit=true&idea=true&id={{u}}">{{t}}</a> - <b>{{v}}</b><br>{{y}}<br> 
+</li>
+{% endfor %}
+</ul>
+<br>
+</fieldset>
+<div id="linkdiv"><a href="#" onclick="Effect.toggle('d2','appear'); return false;" style="width:100%;height:17px;display: block;">Add Idea</a></div>
+<div id="d2" style="display:none;">
+<div style="color:white;">
+    <p>
+        <center>
+        <form action="/note/{{id}}" method="post">
+        <input type="hidden" name="type" value="Idea"/>
+        {{ form2.as_p }}
+        <input type="submit" value="Add" />
+        </form>
+        </center>
+    </p>
+</div>
+</div>
+</fieldset>
+<br><br>
+<H2 class="greyleft2">Links:</H2>
+<fieldset class="linkfield">
+<fieldset class="ideafield">
+<a href="#" onclick="Effect.toggle('d5','appear'); return false;" style="text-align:right;float:right;height:17px;display: block;">
+Sort
+<img src="/static/images/system/oldest1.png" style="border:none;padding:0px 0px 0px 0px;margin:5px 7px 0px 0px;"/>
+</a>
+<div id="d5" style="display:none;z-index:6;">
+<table style="float:right;z-index:6;">
+<tr>
+<td style="width:100px;color:white;font-weight: bold;text-align:right;">
+By date:
+</td>
+<td style="width:85px;">
+<a href="?sort3=idasc" style="float:right;">
+Newest
+<img src="/static/images/system/newest.png" class="imglink" onmouseover="this.src='/static/images/system/newest1.png'" onmouseout="this.src='/static/images/system/newest.png';">
+</a>
+<td style="width:85px;">
+<a href="?sort3=iddesc"style="float:right;">
+Oldiest
+<img src="/static/images/system/oldest.png" class="imglink" onmouseover="this.src='/static/images/system/oldest1.png'" onmouseout="this.src='/static/images/system/oldest.png';">
+</a>
+<td style="width:85px;color:white;font-weight: bold;text-align:right;">
+By title:
+</td>
+<td style="width:50px;">
+<a href="?sort3=titleasc" style="float:right;">
+A
+<img src="/static/images/system/newest.png" class="imglink" onmouseover="this.src='/static/images/system/newest1.png'" onmouseout="this.src='/static/images/system/newest.png';">
+</a>
+<td style="width:50px;">
+<a href="?sort3=titledesc"style="float:right;">
+Z
+<img src="/static/images/system/oldest.png" class="imglink" onmouseover="this.src='/static/images/system/oldest1.png'" onmouseout="this.src='/static/images/system/oldest.png';">
+</a>
+</td>
+</tr>
+</table>
+</div>
+<ul class="ulfield">
+{% for u,t,s,v,x,y in links %}
+<li>
+<a href="/note/{{id}}?edit=true&link=true&id={{u}}">{{t}}</a> - <a href="{{v}}">{{v}}</s><br>{{y}}<br> 
+</li>
+{% endfor %}
+</ul>
+<br>
+</fieldset>
+<div id="linkdiv"><a href="#" onclick="Effect.toggle('d3','appear'); return false;" style="width:100%;height:17px;display: block;">Add Link</a></div>
+<div id="d3" style="display:none;">
+<div style="color:white;font-weight:bold;">
+        <center>
+        <form action="/note/{{id}}" method="post">
+        <input type="hidden" name="type" value="Link"/>
+        {{ form3.as_p }}
+        <input type="submit" value="Add" />
+        </form>
+        </center>
+</div>
+</div>
+</fieldset>
+<br>
+{% endblock %}
+{% block extrabody %}
+{% ifequal timeline "True" %}
+onload="onLoad();" onresize="onResize();" 
+{% endifequal %}
+{% endblock %} 

@@ -1,0 +1,271 @@
+{% extends "idebase.html" %}
+{% block meta %}
+<script type="text/javascript" src="/static/js/javasocketbridge/java_socket_bridge.js"></script>
+<script src="/static/js/mochi/MochiKit.js" type="text/javascript"></script>
+<script src="/static/js/plotkit-svn/excanvas.js" type="text/javascript"></script>
+<script src="/static/js/plotkit-svn/PlotKit_Packed.js" type="text/javascript"></script>
+{% endblock %}
+{% block extrabody %}
+onload="setTimeout('Start();',1000);initDynamicTable();"
+{% endblock %}
+{% block content %}
+<script type="text/javascript">
+var generation=0;
+
+var failed=false;    
+var dataTable = null;
+var layout = null;
+var renderer = null;
+var options = null;
+   
+   function initDynamicTable() {
+       dataTable = $('datatable');
+       options = PlotKit.Base.officeBlue();
+       layout = new Layout("line", options);
+       renderer = new SweetCanvasRenderer($('canvasRun'), layout, options);
+   }
+   
+   function newRow(x,y) {
+       var tbody = dataTable.tBodies[0];
+       var blankRow = TR({}, [
+                TD({}, INPUT({"class":"xvalue", "size":"6", "type":"text", "value":x})),
+                TD({}, INPUT({"class":"yvalue", "size":"6", "type":"text", "value":y}))]);
+        tbody.appendChild(blankRow);
+   }
+   
+   function chartReload() {
+        //var chartStyleSelected = document.forms["options"].chartStyle.selectedIndex;
+        var chartStyle = document.forms["options"].chartStyle[{{chartstyle}}].value;
+
+        //var colorSchemeSelected = document.forms["options"].colorScheme.selectedIndex;
+        var colorScheme = document.forms["options"].colorScheme[{{charttheme}}].value;
+        // grab values
+        var getValue = function(row) {
+           var xElem = MochiKit.DOM.getElementsByTagAndClassName("input", "xvalue", row)[0];
+           var yElem = MochiKit.DOM.getElementsByTagAndClassName("input", "yvalue", row)[0];
+           var xVal = xElem.value;
+           var yVal = yElem.value;
+   
+           if (xVal.length > 0) {
+               xVal = parseFloat(xVal);
+           }
+           else {
+               xVal = 0;
+           }
+   
+           if (yVal.length > 0) {
+               yVal = parseFloat(yVal);
+           }
+           else {
+               yVal = 0;
+           }
+           return [xVal, yVal];
+        }
+       
+        var values = MochiKit.Base.map(getValue, dataTable.tBodies[0].rows);
+
+        // setup layout options
+        var themeName = "office" + colorScheme;
+        var theme = PlotKit.Base[themeName]();
+        MochiKit.Base.update(options, theme);
+                
+        layout.style = chartStyle;
+        MochiKit.Base.update(layout.options, options);
+        MochiKit.Base.update(renderer.options, options);
+                
+        layout.addDataset("data", values);        
+
+        // update
+        layout.evaluate();
+        renderer.clear();
+        renderer.render();
+       
+   }
+    
+function CancelBack(){
+    window.location = "/ide/{{ problem_id }}/{{ project_id }}";
+}       
+    
+function viewSolution(){
+    document.forms["solutionform"].submit();
+}       
+
+function ShowBack(){
+    document.getElementById('backbutton').style.visibility="visible";
+}
+    
+function GoAway(){
+    send('cd ../../\n');
+    send('exit\n');
+}   
+
+function RunProject(){
+    send('{{runcommand}} {{input}} {{output}}\n');
+    document.getElementById('result').innerHTML += "{{runcommand}} {{input}} {{output}}\n";
+    setTimeout("GoAway()",1000);
+}    
+
+function BeforeRun(){
+    send('{{beforeruncommands}}\n');
+    document.getElementById('result').innerHTML += "{{beforeruncommands}}\n";
+    setTimeout("RunProject()",1000);
+}   
+    
+function Exec(){
+    send('cd {{cd}}\n');
+    document.getElementById('result').innerHTML += "cd {{cd}}\n";
+    setTimeout("BeforeRun()",1000);
+}    
+
+function priority(){
+    send('PRIORITY={{priority}}\n');
+}
+
+function on_socket_error(message){
+    if (failed==false){
+        alert("Remote terminal server is not available!");
+        document.getElementById('result').innerHTML += "Connection failed\n";
+        failed=true;
+    }
+}
+    
+function run(){
+    socket_connect('coude.cisary.com', 9000);
+    socket_send("HELLO\n");
+                        
+}
+
+function on_socket_get(message){
+    if (message=="ACCESS_DENY"){
+        document.getElementById('result').innerHTML += "Too many users connected, try launch build later\n";
+        CancelBack();
+    }
+    else
+    if (message=="WAIT"){
+        document.getElementById('result').innerHTML += "Too many users is building theirs projects, waiting..\n";
+    }
+    else
+    if (message=="ACCESS_ALLOW"){
+    }
+    else
+    if (message=="HELLO"){
+        document.getElementById('result').innerHTML += "Connected succesfully\n";
+        setTimeout("priority()",1000);
+        
+    }
+    else
+    if (message=="START"){
+        document.getElementById('result').innerHTML += "Remote terminal launched\n";
+        setTimeout("Exec()",1000);
+    }
+    else
+    if (message=="DONE"){
+        document.getElementById('result').innerHTML += "Run command finished\n";
+        send('CLOSE\n');
+        ShowBack();
+    }
+    else{
+        generation=generation+1;
+        document.getElementById('generation').value = generation;
+        document.getElementById('fitness').value = message;
+        newRow(generation,message);
+        document.getElementById('result').innerHTML += message+"\n";
+        chartReload();
+    }
+}
+function send(message){
+    socket_send(message);
+}
+                
+function Load(){
+    if (java_socket_bridge_ready_flag==true) {
+        document.getElementById('result').innerHTML += "Applet loaded\n";
+        run();
+    }
+    else {
+        document.getElementById('result').innerHTML += "Applet not loaded, trying againg!";
+        setTimeout('Load()',1000)
+    }
+}
+
+function Start(){
+    if(!navigator.javaEnabled()){
+        alert('Java is needed, it is probably turned off or not installed!');
+    }
+    else{
+        document.getElementById('result').innerHTML += "Java is installed\n";
+        Load();
+    } 
+}
+</script>
+
+<form name="options" style="display:none;">
+<select id="chartStyle" name="chartStyle">
+    <option value="line">Line Chart</option>
+    <option value="bar">Bar Chart</option>
+    <option value="pie">Pie Chart</option>
+</select>
+<select id="colorScheme" name="colorScheme">
+    <option value="Blue">Blue</option>
+    <option value="Red">Red</option>
+    <option value="Green">Green</option>
+    <option value="Purple">Purple</option>
+    <option value="Cyan">Cyan</option>
+    <option value="Orange">Orange</option>
+</select>
+</form>
+
+<div><applet id="JavaSocketBridge" name="JavaSocketBridge" archive="/static/js/javasocketbridge/JavaSocketBridge.jar" code="JavaSocketBridge.class" width="0" height="0"></applet></div>
+<div id="largeide-border">
+<br>
+    
+    
+    <div style="float: center; width: 250px;display:none;">
+        <table id="datatable" cellspacing="0" cellpadding="0">
+            <tbody>
+            </tbody>
+        </table>
+    
+</div>
+    <center>
+    <div style="float:center;width: 660px;background:white;padding-left:10px;padding-top:4px;">
+        <div><canvas id="canvasRun" width="650" height="400" style="border: 1px solid #eee;color:white;"></canvas></div>
+    </div>
+    </center>
+    
+    
+    
+
+<br>
+<div style="color:white;font-weight:bold;">
+<p>
+
+</p>
+
+<form action="/ide/{{problem_id}}/{{project_id}}/" method="post" name="solutionform" id="solutionform"> 
+<input type="hidden" name="outputid" value="{{outputid}}"/>
+<input type="hidden" name="type" value="viewSolution"/>
+<b style="float:left;margin-left:25px;padding-top:4px;">Generation:</b>
+<input id="generation" type="text" name="generation" value="0" style="float:left;">                                                                         
+<input id="fitness" type="text" name="fitness" value="0" style="float:right;margin-right:27px;">
+<b style="float:right;padding-top:4px;">Fitness:</b>
+<input id="backbutton" name="backbutton" value="View Solution" style="visibility:hidden;text-align:center;margin-left:15px;" onclick="viewSolution();"/>
+</form>
+<br>
+
+<div id="linkdiv"><a href="#" onclick="Effect.toggle('d3','appear'); return false;" style="width:100%;height:17px;display: block;">Show terminal</a></div>
+<div id="d3" style="display:none;">
+<textarea id="result" style="margin-left:15px;width:95%;height:120px; background:white;color:black;float:center;">
+</textarea>
+</div>
+<br>
+<br>
+</div>
+<script type="text/javascript">
+// <![CDATA[
+if (!window.$) {window.$ = function(id) { return document.getElementById(id); }}
+var shadowedBorder    = RUZEE.ShadedBorder.create({ corner:7, shadow:22 });
+shadowedBorder.render('largeide-border');
+// ]]>
+</script>
+{% endblock %}

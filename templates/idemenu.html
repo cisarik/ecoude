@@ -1,0 +1,234 @@
+<script type="text/javascript">
+function deleteconfirmation() {
+    var answer = confirm("Do you really want to delete project {{ project_title }} and all its files?")
+    if (answer){
+            window.location = "/ide/{{ problem_id }}/{{ project_id }}?deleteproject=true";
+    }
+    else{
+    }
+}
+function deletefileconfirmation() {
+    var answer = confirm("Do you really want to delete file {{ openedname }} ?")
+    if (answer){
+		window.location = "/ide/{{ problem_id }}/{{ project_id }}?deletesourcecodefile=true&id={{openedid}}";
+    }
+    else{
+	}
+}
+function deleteinputgeneratorfileconfirmation() {
+    var answer = confirm("Do you really want to delete input generator {{ openedgeneratorname }} ?")
+    if (answer){
+            window.location = "/ide/{{ problem_id }}/{{ project_id }}?deleteinputgeneratorfile=true&id={{openedid}}";
+    }
+    else{
+	}
+}
+function closefileconfirmation() {
+	var answer = confirm("Do you really want to {{ openedname }} without saving?")
+    if (answer){
+            window.location = "/ide/{{ problem_id }}/{{ project_id }}";
+    }
+    else{
+            submittextarea()
+	}
+}
+function openinputgeneratorfile() {
+    var elm = document.getElementById("inputgeneratorfile");
+    var generatorid=elm.options[elm.selectedIndex].value;
+    if (generatorid=="New"){
+		window.location = "/ide/{{problem_id}}/{{project_id}}/?newinputgeneratorfile=true";
+    }
+    else{
+            window.location = "/ide/{{problem_id}}/{{project_id}}/?openinputgeneratorfile=true&id="+generatorid;
+	}
+}
+
+function run() {
+    var elm = document.getElementById("inputgeneratorfile");
+    var generatorid=elm.options[elm.selectedIndex].value;
+    if (generatorid=="New"){
+		window.location = "/ide/{{problem_id}}/{{project_id}}/?newinputgeneratorfile=true";
+    }
+    else{
+        var l = document.getElementById("inputfile");
+        var inputfileid=l.options[l.selectedIndex].value;
+        if (inputfileid=="New"){
+            {% ifequal frameworkrundirectly "True" %}
+            window.location = "/ide/{{problem_id}}/{{project_id}}/?runinputgenerator=true&id="+generatorid+"&rundirectly=true&fileid={{openedid}}"
+            {% else %}
+            window.location = "/ide/{{problem_id}}/{{project_id}}/?runinputgenerator=true&id="+generatorid;
+            {% endifequal %}
+        }
+        else{
+            {% ifequal frameworkrundirectly "True" %}
+            window.location = "/ide/{{problem_id}}/{{project_id}}/?run=true&id="+inputfileid+"&rundirectly=true&fileid={{openedid}}";
+            {% else %}
+            window.location = "/ide/{{problem_id}}/{{project_id}}/?run=true&id="+inputfileid;
+            {% endifequal %}
+        }
+    }
+}
+
+function submittextarea() {
+        document.forms["templateform"].submit();
+}
+
+function sourcecode() {
+        document.sourcecode_form.submit();
+}
+    
+function testinput() {
+        document.testinputform.submit();
+}
+    
+function runinput() {
+        document.inputform.submit();
+}
+</script>
+
+<ul id="nav" class="dropdown dropdown-horizontal">
+<li><a href="/ide/{{problem_id}}/{{project_id}}" class="dir">Project</a>
+	<ul>
+	<li><a href="/ide/{{ problem_id }}/{{ project_id }}?newproject=true">New</a></li>
+        <li><a href="/ide/{{ problem_id }}/{{ project_id }}?projects=true">Open</a></li>
+        {% ifequal editable 1 %}
+        <li><a href="/ide/{{ problem_id }}/{{ project_id }}?renameproject=true">Rename</a></li>
+        <li><a href="#" onclick="deleteconfirmation()">Delete</a></li>
+        {% ifequal public 1 %}
+        <li><a href="/ide/{{ problem_id }}/{{ project_id }}/?make_private=true">Make Private</a></li>
+        {% else %}
+        <li><a href="/ide/{{ problem_id }}/{{ project_id }}/?make_public=true">Make Public</a></li>
+        {% endifequal %}
+        {% endifequal %}
+	<li><a href="javascript:window.close();">Close</a></li>
+	</ul>
+</li>
+
+{% ifequal inputgenerator "True" %}
+<li><a href="/ide/{{problem_id}}/{{project_id}}" class="dir">File</a>
+	<ul>
+        
+        {% ifequal editableinputgenerator "True" %}
+        <li><a href="/ide/{{ problem_id }}/{{ project_id }}?newinputgeneratorfile=true">New</a></li>
+        <li><a href="javascript:submittextarea();">Save</a></li>
+        <li><a href="/ide/{{ problem_id }}/{{ project_id }}?renameinputgeneratorfile=true&id={{openedid}}">Rename</a></li>
+        <li><a href="#" onclick="deleteinputgeneratorfileconfirmation();">Delete</a></li>
+        {% endifequal %}
+	<li><a href="#" onclick="closefileconfirmation();">Close</a></li>
+
+	</ul>
+</li>
+{% else %}
+<li><a href="/ide/{{problem_id}}/{{project_id}}" class="dir">File</a>
+	<ul>
+	
+        {% ifequal openedsourcecode "True" %}
+        {% ifequal editable 1 %}
+        <li><a href="/ide/{{ problem_id }}/{{ project_id }}?newsourcecodefile=true&opened=true">New</a></li>
+        <li><a href="#" onclick="submittextarea();">Save</a></li>
+        <li><a href="/ide/{{ problem_id }}/{{ project_id }}?renamesourcecodefile=true&id={{openedid}}">Rename</a></li>
+        <li><a href="#" onclick="deletefileconfirmation();">Delete</a></li>
+        {% endifequal %}
+	<li><a href="#" onclick="closefileconfirmation();">Close</a></li>
+        {% endifequal %}
+	</ul>
+</li>
+{% endifequal %}
+<li><a href="/" class="dir">Todos</a>
+	<ul>
+	{% for id,name in todos %}
+	<li><a href="/ide/{{problem_id}}/{{project_id}}?showtodo=true&id={{id}}">{{ name }}</a></li>
+	{% endfor %}
+        <li><a href="/ide/{{problem_id}}/{{project_id}}?newtodo=true&opened=true">New</a></li>
+	</ul>
+</li>
+<li><a href="/" class="dir">Ideas</a>
+	<ul>
+	{% for id,name in ideas %}
+	<li><a href="/ide/{{problem_id}}/{{project_id}}?showidea=true&id={{id}}">{{ name }}</a></li>
+	{% endfor %}
+        <li><a href="/ide/{{problem_id}}/{{project_id}}?newidea=true&opened=true">New</a></li>
+	</ul>
+</li>
+<li><a href="/" class="dir">Links</a>
+	<ul>
+	{% for id,name in links %}
+	<li><a href="/ide/{{problem_id}}/{{project_id}}?showlink=true&id={{id}}">{{ name }}</a></li>
+	{% endfor %}
+        <li><a href="/ide/{{problem_id}}/{{project_id}}?newlink=true&opened=true">New</a></li>
+	</ul>
+</li>
+</ul>
+<img src="/static/images/system/right.png" border="0" align="left" alt="Plus" name="sub"/>
+
+
+<table BORDER="0" cellpadding="0" CELLSPACING="0" align="right" >
+<tr>
+<td WIDTH="29" HEIGHT="29" bgcolor="#000000" align="right">
+{% ifequal runinputgenerator "True" %}
+<a href="#" onclick="runinput();"  class="mainlink" align="right">Run</a>
+{% else %}
+
+{% ifequal inputgenerator "True" %}
+<a href="/ide/{{problem_id}}/{{project_id}}?testinputgenerator=true&id={{openedid}}" class="mainlink" align="right">Test</a>
+{% else %}
+
+{% ifequal testinputgenerator "True" %}
+<a href="#" onclick="testinput();" class="mainlink" align="right">Done</a>
+{% else %}
+
+{% ifequal frameworkrundirectly "True" %}
+{% ifequal openedsourcecode "True" %}
+<a href="#" onclick="run();" class="mainlink" align="right">Run</a>
+{% endifequal %}
+{% else %}
+{% ifequal editable 1 %}
+<a href="/ide/{{problem_id}}/{{project_id}}?build=true" class="mainlink" align="right">Build</a>
+{% endifequal %}
+{% ifequal runnable "True" %}
+<a href="#" onclick="run();" class="mainlink" align="right">Run</a>
+{% endifequal %}
+{% endifequal %}
+{% endifequal %}
+{% endifequal %}
+{% endifequal %}
+
+</td>
+</tr>
+</table>
+<img src="/static/images/system/left.png" align="right">
+<form action="/ide/{{problem_id}}/{{project_id}}/" method="post" name="form" id="form"> 
+<select id="inputfile" name="inputfile" style="float: right;margin-top:4px;">
+<option selected value="New">New</option>
+{% for id,i in inputfiles %}
+<option value="{{ id }}">{{ id }}</option>
+{% endfor %}
+</select>
+<b style="float:right;margin-top:8px;font-size:11px; margin-left:10px;font-family: Arial, Helvetica, sans-serif;">
+Input:
+</b>
+
+<input type="button" style="float:right;margin-top:4px;" value="Edit" onclick="openinputgeneratorfile();">
+<select id="inputgeneratorfile" name="inputfilegenerator" style="float: right;margin-top:4px;">
+{% ifequal inputgenerator "True" %}
+<option selected value="{{ openedgeneratorid }}">{{ openedgeneratorname }}</option>
+{% endifequal %}
+{% for id,name in inputgenerators %}
+<option  value="{{ id }}">{{ name }}</option>
+{% endfor %}
+<option value="New">New</option>
+</select>
+</form>
+
+<form action="/ide/{{problem_id}}/{{project_id}}/" method="post" name="sourcecode_form" id="sourcecode_form"> 
+<input type="hidden" name="type" value="changeSourceCode"/>
+<select name="sourcecodefile" style="float: right;margin-top:4px;margin-right:15px;" onChange="sourcecode();">
+<option selected value="{{ openedid }}">{{ openedname }}</option>
+{% for id,name in sourcecodefiles %}
+<option value="{{ id }}">{{ name }}</option>
+{% endfor %}
+</select>
+<b style="float:right;margin-top:8px;font-size:11px; font-family: Arial, Helvetica, sans-serif;">
+File:
+</b>
+</form>

@@ -1,0 +1,41 @@
+<ul id="nav" class="dropdown dropdown-horizontal">
+<li><a href="/" class="dir">Home</a>
+	<ul>
+	<li><a href="/problems/">Problems</a></li>
+	<li><a href="/statistics/">Statistics</a></li>
+	<li><a href="/about/">About</a></li>
+	</ul>
+</li>
+{% for object in menu.items %}
+<li><a href="/" class="dir">{{ object.0 }}</a>
+	<ul>
+	{% for o in object.1.items%}
+	<li><a href="/{{ o.1 }}">{{ o.0 }}</a></li>
+	{% endfor %}
+	</ul>
+</li>
+{% endfor %}
+</ul>
+<img src="/static/images/system/right.png" border="0" align="left" alt="Plus" name="sub"/>
+{% ifequal logged "True" %}
+<TABLE BORDER="0" cellpadding="0" CELLSPACING="0" align="right">
+<TR>
+<TD WIDTH="29" HEIGHT="29" bgcolor="#000000" align="right" >
+<a href="/accounts/logout" class="mainlink" align="right">Logout</a>
+</TD>
+</TR>
+</TABLE>
+<img src="/static/images/system/left.png" align="right">
+<a href="/statistics" class="navlink" align="right">{{ user }}</a>
+{% else %}
+<TABLE BORDER="0" cellpadding="0" CELLSPACING="0" align="right" >
+<TR>
+<TD WIDTH="29" HEIGHT="29" bgcolor="#000000" align="right">
+<a href="/accounts/login" class="mainlink" align="right">Login</a>
+</TD>
+</TR>
+</TABLE>
+<img src="/static/images/system/left.png" align="right">
+<a href="/accounts/signup" class="navlink" align="right">Sign-up</a>
+{% endifequal %}
+    

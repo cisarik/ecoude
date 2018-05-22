@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block meta %}
+<script type="text/javascript" src="/static/js/ste/SimpleTextEditor.js"></script> 
+<link rel="stylesheet" type="text/css" href="/static/css/SimpleTextEditor.css"> 
+<script language="javascript" src="/static/js/datepick/ts_picker.js">//Script by Denis Gritcyuk: tspicker@yahoo.com</script>
+<link rel="stylesheet" type="text/css" href="/static/css/calendar.css"/>
+{% endblock %}
+{% block title %}Statistics{% endblock %}
+{% block content %}
+<br>
+<div id="titlediv">
+<center>
+Statistics
+</center>
+<br>
+</div>
+<fieldset class="todofield">
+<H2 class="greyleft2">Todos:</H2>
+<br>
+<ul class="ulfield">
+<li></li>
+</ul>
+</fieldset>
+</fieldset>
+<br>
+{% endblock %}
+{% block extrabody %}
+onload="onLoad();" onresize="onResize();" 
+{% endblock %} 
+

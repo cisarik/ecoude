@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block meta %}
+<script type="text/javascript" src="/static/js/ste/SimpleTextEditor.js"></script> 
+<link rel="stylesheet" type="text/css" href="/static/css/SimpleTextEditor.css"> 
+<script language="javascript" src="/static/js/datepick/ts_picker.js">//Script by Denis Gritcyuk: tspicker@yahoo.com</script>
+<link rel="stylesheet" type="text/css" href="/static/css/calendar.css"/>
+{% endblock %}
+{% block title %}Statistics{% endblock %}
+{% block content %}
+<br>
+<div id="titlediv">
+<center>
+Statistics
+</center>
+<br>
+</div>
+<fieldset class="todofield">
+<H2 class="greyleft2">{{user}}</H2>
+<br>
+
+{% for tags,notes,links,ideas,todos,problems,projects,files in userstats %}
+<ul class="ulfield">
+<li>Tags:<b style="padding-left:10px">{{tags}}</b></li>
+<li>Notes:<b style="padding-left:10px">{{notes}}</b></li>
+<li>Links:<b style="padding-left:10px">{{links}}</b></li>
+<li>Ideas:<b style="padding-left:10px">{{ideas}}</b></li>
+<li>Todos:<b style="padding-left:10px">{{todos}}</b></li>
+<li>Problems:<b style="padding-left:10px">{{problems}}</b></li>
+<li>Projects:<b style="padding-left:10px">{{projects}}</b></li>
+<li>Files:<b style="padding-left:10px">{{files}}</b></li>
+</ul>
+{% endfor %}
+</fieldset>
+<br>
+<fieldset class="todofield">
+<H2 class="greyleft2">Total</H2>
+<br>
+{% for tags,notes,links,ideas,todos,problems,projects,files in totalstats %}
+<ul class="ulfield">
+<li>Tags:<b style="padding-left:10px">{{tags}}</b></li>
+<li>Notes:<b style="padding-left:10px">{{notes}}</b></li>
+<li>Links:<b style="padding-left:10px">{{links}}</b></li>
+<li>Ideas:<b style="padding-left:10px">{{ideas}}</b></li>
+<li>Todos:<b style="padding-left:10px">{{todos}}</b></li>
+<li>Problems:<b style="padding-left:10px">{{problems}}</b></li>
+<li>Projects:<b style="padding-left:10px">{{projects}}</b></li>
+<li>Files:<b style="padding-left:10px">{{files}}</b></li>
+</ul>
+{% endfor %}
+</fieldset>
+</fieldset>
+<br>
+{% endblock %}
+{% block extrabody %}
+onload="onLoad();" onresize="onResize();" 
+{% endblock %} 
+

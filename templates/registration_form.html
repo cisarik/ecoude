@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block meta %}
+<script type="text/javascript">
+	$(function() {
+		$("input#id_username").focus();
+		$("input[type='text'], input[type='password']").addClass("text");
+	});
+</script>
+{% endblock %}
+{% block formtitle %}
+New registration
+{% endblock %}
+{% block form %}
+
+	<form action="" method="post" accept-charset="utf-8">
+	<fieldset>
+        <center>
+		<legend>{% trans "User registration" %}</legend>
+		<label for="id_username">{% trans "Username" %}</label>
+		<p>{{ form.username }}
+			{% if form.username.errors %}
+				<span class="quiet red"><br />* {{ form.username.errors|join:"; " }}</span>
+			{% endif %}
+		</p>
+		<label for="id_email">{% trans "E-mail" %}</label>
+		<p>{{ form.email }}
+			{% if form.email.errors %}
+				<span class="quiet red"><br />* {{ form.email.errors|join:"; " }}</span>
+			{% endif %}
+		</p>
+		<label for="id_password1">{% trans "Password" %}</label>
+		<p>{{ form.password1 }}
+			{% if form.password1.errors %}
+				<span class="quiet red"><br />* {{ form.password1.errors|join:"; " }}</span>
+			{% endif %}
+		</p>
+		<label for="id_password2">{% trans "Password (again)" %}</label>
+		<p>{{ form.password2 }}
+			{% if form.password2.errors %}
+				<span class="quiet red"><br />* {{ form.password2.errors|join:"; " }}</span>
+			{% endif %}
+		</p>
+		{% if form.non_field_errors %}
+			<ul class="quiet red">{{ form.non_field_errors.as_ul }}</ul>
+		{% endif %}
+        <p><input type="submit" value="{% trans 'Register' %}" /></p>
+            </center>
+    </fieldset>
+	</form>
+	
+{% endblock %}
+
+

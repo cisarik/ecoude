@@ -1,0 +1,70 @@
+<script type="text/javascript">
+Effect.DropShadow = function(element){
+	element = $(element);
+	
+	var i1 = new Element('div', { 'class': 'i1' });
+	var i2 = new Element('div', { 'class': 'i2' });
+	var i3 = new Element('div', { 'class': 'i3 cf' });
+	
+	i2.appendChild(i3);
+	i1.appendChild(i2);
+	
+	$A(element.childNodes).each(function(e){ i3.appendChild(e); });
+	
+	var bfunc = function(className){
+		var e = new Element('div', { 'class': className });
+		e.appendChild(new Element('div'));
+		return e;
+	};		
+	
+	element.addClassName('cp');
+	element.appendChild(bfunc('bt'));
+	element.appendChild(i1);
+	element.appendChild(bfunc('bb'));		
+};
+
+
+var theMonths = new 
+Array("January","February","March","April","May","June","July","August","September","October","November","December");  
+    dt = new Date();  
+     function getLetter(n) {  
+     if(n == 1 || n == 21 || n == 31) {  
+         return "st";  
+     } else if (n == 2 || n == 22) {  
+         return "nd";  
+     } else if (n == 3 || n == 23) {  
+        return "rd";       }  
+    return "th";  
+}  
+dy = dt.getDate();  
+dy = dy + getLetter(dy) + " "; 
+mo = dt.getMonth();  
+yr = " "+dt.getFullYear();
+    
+setInterval("settime()", 1000);
+
+function settime () {
+  var curtime = new Date();
+  var curhour = curtime.getHours();
+  var curmin = curtime.getMinutes();
+  var cursec = curtime.getSeconds();
+  var time = "";
+ 
+  if(curhour == 0) curhour = 12;
+  time = (curhour > 12 ? curhour - 12 : curhour) + ":" +
+         (curmin < 10 ? "0" : "") + curmin + ":" +
+         (cursec < 10 ? "0" : "") + cursec + " " +
+         (curhour > 12 ? "PM" : "AM");
+ 
+  document.date.clock.value = time;
+}
+
+function blank(a) {
+	if(a.value == a.defaultValue) a.value = "";
+}
+function unblank(a) {
+	if(a.value == "") a.value = a.defaultValue;
+}
+
+
+</script>

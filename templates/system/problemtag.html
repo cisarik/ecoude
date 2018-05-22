@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block meta %}
+<script type="text/javascript" src="/static/js/ste/SimpleTextEditor.js"></script> 
+<link rel="stylesheet" type="text/css" href="/static/css/SimpleTextEditor.css"> 
+<script language="javascript" src="/static/js/datepick/ts_picker.js">//Script by Denis Gritcyuk: tspicker@yahoo.com</script>
+<link rel="stylesheet" type="text/css" href="/static/css/calendar.css"/>
+<script type="text/javascript">
+function confirmation() {
+	var answer = confirm("Do you really want to delete tag {{tag}} ?")
+	if (answer){
+		window.location = "/tag/{{id}}?delete=true";
+	}
+	else{
+	}
+}
+</script> 
+{% endblock %}
+{% block title %}
+{% endblock %}
+{% block content %}
+<br>
+<div id="titlediv">
+<center>
+{{tag}}
+</center>
+{% ifequal editable "True" %}
+<div id="d" style="display:none;">
+<div style="color:white;float:right;">
+    <p>
+        <form action="/tag/{{id}}" method="POST">
+        <input type="hidden" name="id" value="{{id}}"/> 
+        {{ tagform.as_p }}
+        <input type="submit" value="Edit"/>
+        </form>
+    </p>
+</div>
+</div>
+<a href="#" onclick="Effect.toggle('d','appear'); return false;" style="foat:right">edit</a><br>
+
+<a href="#" onclick="confirmation()"style="float:right;">delete</a>
+<br>
+</div>
+<br>
+{% else %}
+{% endifequal %}
+
+<br>
+<div id="titlediv">
+Problems:
+</div>
+<fieldset class="todofield">
+<a href="#" onclick="Effect.toggle('d5','appear'); return false;" style="text-align:right;float:right;height:17px;display: block;">
+Sort
+<img src="/static/images/system/oldest1.png" style="border:none;padding:0px 0px 0px 0px;margin:5px 7px 0px 0px;"/>
+</a>
+<div id="d5" style="display:none;z-index:6;">
+<table style="float:right;z-index:6;">
+<tr>
+<td style="width:100px;color:white;font-weight: bold;text-align:right;">
+By date:
+</td>
+<td style="width:85px;">
+<a href="?sort3=idasc" style="float:right;">
+Newest
+<img src="/static/images/system/newest.png" class="imglink" onmouseover="this.src='/static/images/system/newest1.png'" onmouseout="this.src='/static/images/system/newest.png';">
+</a>
+<td style="width:85px;">
+<a href="?sort3=iddesc"style="float:right;">
+Oldiest
+<img src="/static/images/system/oldest.png" class="imglink" onmouseover="this.src='/static/images/system/oldest1.png'" onmouseout="this.src='/static/images/system/oldest.png';">
+</a>
+<td style="width:85px;color:white;font-weight: bold;text-align:right;">
+By title:
+</td>
+<td style="width:50px;">
+<a href="?sort3=titleasc" style="float:right;">
+A
+<img src="/static/images/system/newest.png" class="imglink" onmouseover="this.src='/static/images/system/newest1.png'" onmouseout="this.src='/static/images/system/newest.png';">
+</a>
+<td style="width:50px;">
+<a href="?sort3=titledesc"style="float:right;">
+Z
+<img src="/static/images/system/oldest.png" class="imglink" onmouseover="this.src='/static/images/system/oldest1.png'" onmouseout="this.src='/static/images/system/oldest.png';">
+</a>
+</td>
+</tr>
+</table>
+</div>
+<br><br>
+{% for a,b,c,x,y,d,e,f,g,h in problems %}
+<h2 class="greyleft2">
+<a href="#" onclick="javascript:window.open('/ide/{{a}}/0?projects=true&opened=false', '_blank','top=100, left=100, height=770, width=800, status=no, menubar=no, resizable=no, scrollbars=no, toolbar=no, location=no, directories=no');">
+<img style="border:none;margin-left:10px;margin-right:20px;padding-top:3px;" align=left src="/static/images/icons/event.png">{{y}}</a>
+<a href="/problem/{{a}}" style="margin-left:20px;">{{x}}
+Notes:{{e}} Links:{{f}} Ideas:{{g}} Todos:{{h}}</a></h2>
+<br><br>
+{% endfor %}
+</fieldset>
+<br>
+{% endblock %}
+{% block extrabody %}
+onload="onLoad();" onresize="onResize();" 
+{% endblock %} 
+

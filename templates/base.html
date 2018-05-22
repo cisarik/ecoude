@@ -1,0 +1,303 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">                                          
+<html>
+<head>
+<title>{% block title %}{% endblock %}</title>                                                             
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">                                
+<meta name="author" content="cisary (cisary@gmail.com)">
+<meta name="menu-author" content="Tom@Lwis (http://www.lwis.net/free-css-drop-down-menu/)">
+<link rel="shortcut icon" HREF="/static/images/system/fav.gif">
+{% block met %}{% endblock %}
+<script src="/static/js/scriptaculous/prototype.js" type="text/javascript"></script>
+<script src="/static/js/scriptaculous/scriptaculous.js" type="text/javascript"></script>
+<script src="/static/js/scriptaculous/scriptaculous.js?load=effects" type="text/javascript"></script>
+<script src="/static/js/scriptaculous/scriptaculous.js?load=controls" type="text/javascript"></script>
+<script src="/static/js/system/shadedborder.js" type="text/javascript"></script>  
+<script src="/static/js/json/json2.js" type="text/javascript"></script>  
+<script src="/static/js/tinydropdown/tinydropdown.js" type="text/javascript"></script>  
+
+{% include "javascript.html" %}
+{% block meta %}{% endblock %}
+            
+   
+
+<script src="/static/js/scriptaculous/slider.js" type="text/javascript"></script>
+{% include "style.html" %}
+</head>
+<body {% block extrabody %}{% endblock %} >
+<div id="header">
+{% block menu %}
+{% include "menu.html" %}
+{% include "shadow.html" %}
+{% endblock %}
+</div>
+<br>
+<br>
+<div id="shadowed-border">
+{% include "title_home.html" %}
+<br>
+</div>
+<div id="my-border2">
+<br>
+<b class="title-black">
+Time:
+</b>
+<center>
+<form name="date">
+<input type="text" name="clock" style="border: 0px; width:88%;font-weight: bold;text-align:center;margin:0px 0px 0px 8px;" value="">
+<b class="trans-title">
+<script language="javascript">
+document.write(dy+theMonths[mo]+yr);  
+</script>
+</b>
+</form>
+</center>
+{% ifequal logged "True" %}
+<br>
+<b class="trans-title-black">
+<a href="#" onclick="Effect.toggle('apps','appear'); setSliderValue(slider,{{priority}});return false;" >Settings</a>
+</b>
+{% endifequal %}
+<br>
+<br>
+<div id="apps" style="display:none;" >
+<b class="title-black">Timeline</b><br>
+<form action="/settings/" method="post">
+<center>
+{% ifequal timeline "True" %}
+<input type="hidden" name="type" value="TimelineOff"/>
+<input checked type="checkbox" name="show" onclick="this.form.submit();"/><b>Visible</b>
+{% else %}
+<input type="hidden" name="type" value="TimelineOn"/>
+<input type="checkbox" name="show" onclick="this.form.submit();"/><b>Hidden</b>
+{% endifequal %}
+
+</center>
+</form>
+<br>
+<b class="title-black">Theme</b><br>
+<div align="center">
+    <script language="javascript" type="text/javascript">
+    function js2() {
+        
+        document.theme_form.submit();
+    }
+</script>
+<form action="/settings/" method="post" name="theme_form" id="theme_form"> 
+<input type="hidden" name="type" value="Theme"/>
+
+<select name="themesdropdown" onChange="js2();">
+{% for object,v in themes %}
+{% ifequal object theme  %}
+<option selected value="{{ theme }}">{{ theme }}</option>
+{% else %}
+<option value="{{ object }}">{{ object }}</option>
+{% endifequal %}
+{% endfor %}
+</select>
+</form>
+</div>
+<br>
+<b class="title-black">Chart style</b><br>
+<div align="center">
+    <script language="javascript" type="text/javascript">
+    function js3() {
+        
+        document.chartstyle_form.submit();
+    }
+</script>
+<form action="/settings/" method="post" name="chartstyle_form" id="chartstyle_form"> 
+<input type="hidden" name="type" value="ChartStyle"/>
+<select name="chartstylesdropdown" onChange="js3();">
+<option {% ifequal chartstyle 0 %}selected{% else %}{% endifequal %} value="0">Line</option>
+<option {% ifequal chartstyle 1 %}selected{% else %}{% endifequal %} value="1">Bar</option>
+<option {% ifequal chartstyle 2 %}selected{% else %}{% endifequal %} value="2">Pie</option>
+</select>
+</form>
+</div>
+<br>
+<b class="title-black">Chart Theme</b><br>
+<div align="center">
+    <script language="javascript" type="text/javascript">
+    function js4() {
+        
+        document.charttheme_form.submit();
+    }
+</script>
+<form action="/settings/" method="post" name="charttheme_form" id="charttheme_form"> 
+<input type="hidden" name="type" value="ChartTheme"/>
+<select name="chartthemesdropdown" onChange="js4();">
+<option {% ifequal charttheme 0 %}selected{% else %}{% endifequal %} value="0">Blue</option>
+<option {% ifequal charttheme 1 %}selected{% else %}{% endifequal %} value="1">Red</option>
+<option {% ifequal charttheme 2 %}selected{% else %}{% endifequal %} value="2">Green</option>
+<option {% ifequal charttheme 3 %}selected{% else %}{% endifequal %} value="3">Purple</option>
+<option {% ifequal charttheme 4 %}selected{% else %}{% endifequal %} value="4">Cyan</option>
+<option {% ifequal charttheme 5 %}selected{% else %}{% endifequal %} value="5">Orange</option>
+</select>
+</form>
+</div>
+<br>
+<b class="title-black">Frameworks</b>
+<b class="trans-title">Active:</b><br><br>
+<ul id="thelist1" class="sortableul">
+{% for object in favorites %}
+<li id="thelist1_{{object.framework}}" class="sortableli">{{object.framework}}</li>
+{% endfor %}
+</ul>
+<form action="/settings/" method="post" name="transfer_form" id="transfer_form"> 
+<input type=hidden name="param1"> 
+<input type=hidden name="param2"> 
+<input type="hidden" name="type" value="Frameworks"/>
+</form>
+<script language="javascript" type="text/javascript">
+    function js() {
+        document.transfer_form.param1.value=Sortable.serialize('thelist1');
+        document.transfer_form.param2.value=Sortable.serialize('thelist2');
+        document.transfer_form.submit();
+    }
+</script>
+<center>
+<div class="blacksmallbutton">
+<a href="#" onclick="js();return false;">Refresh</a>
+</div>
+</center>
+<br>
+<b class="trans-title">Inactive:</b><br>
+<ul id="thelist2" class="sortableul">
+{% for object in others %}
+<li id="thelist2_{{object.framework}}" class="sortableli">{{object.framework}}</li>
+{% endfor %}
+</ul>
+<br>
+<script language="javascript" type="text/javascript">
+    function js5() {
+        document.slider_form.submit();
+    }
+</script>
+<b class="title-black">Priority</b><br>
+<form method="post" action="/settings/" name="slider_form" id="slider_form">    
+<input type="text" id="slider-value" name="slider-value" style="border: 0px; width:88%;font-weight: bold;text-align:center;margin:0px 0px 0px 8px;" onkeyup="setSliderValue(slider, this.value);" />
+<input type="hidden" name="type" value="Priority"/>
+<b class="trans-title">    
+Unix "nice" style:
+</b>
+<br>
+<br>
+<div style="margin-left:36px;">
+<div id="track1" style="width:100px; height:9px;">
+<div id="track1-left"></div>
+<div id="handle1" style="width:19px; height:20px;"><img src="/static/images/system/slider-images-handle.png" alt="" style="float: left;" /></div>
+</div>
+<br>
+<div class="blacksmallbutton">
+<a href="#" onclick="js5();">Save</a>
+</div>
+</form>
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+var slider=new Control.Slider('handle1', 'track1', {
+onSlide: function(v) { if ((v*100).toFixed() >= 50) {$('slider-value').value = (-1*(((v*100)-50)/3.33333333)).toFixed();} else {$('slider-value').value = (-1*(((v*100)/3.33333333)-15)).toFixed();} },
+onChange: function(v) { if ((v*100).toFixed() >= 50) {$('slider-value').value = (-1*(((v*100)-50)/3.33333333)).toFixed();} else {$('slider-value').value = (-1*(((v*100)/3.33333333)-15)).toFixed();}}
+});
+function setSliderValue(slider, value) {
+if (value == '') return;
+				
+if (isNaN(value))
+    slider.setValue(0);
+else if (value==0)
+    slider.setValue(0)
+else if (value>=-15 & value<0)
+    slider.setValue((value*(-3.3333333)+50)/100);
+else
+    slider.setValue((((-3.3333)*value)+50)/100);
+}
+// ]]>
+</script>
+</div>
+<br>
+</div>
+<b class="trans-title-black">
+<a href="#" onclick="Effect.toggle('dtag','appear'); return false;" >Problems by Tags</a>
+</b>
+<br><br>
+<div id="dtag" >
+<center>
+{% for id,title in problemstag %}
+<div class="blacksmallbutton">
+<a href="/problemtag/{{id}}">{{title}}</a>
+</div>
+{% endfor %}
+</center>
+<br><br>
+</div>
+</div>
+<div id="my-border">
+{% ifequal showform "True" %}
+<div id="split">
+    <h3><span>Registration</span></h3>
+    <div class="content">
+    <p>
+        <form action="/threads/" method="post">
+        {{ form.as_p }}
+        <input type="submit" value="Add" />
+        </form>
+    </p>
+    </div>
+</div>
+% else %}
+{% endifequal %}
+{% block content %}{% endblock %}
+</fieldset>
+    {% ifequal user "admin" %}
+    <fieldset class="debugfield">
+        <a href="javascript:onoff('admin_shellserver');"><div style="width:100%;height:20px;background-color:white;text-align:center;">Shellserver</div></a>
+        <div id="admin_shellserver">
+        <a href="javascript:RPC('admin_shellserver_refresh',[]);" style="float:right;">Refresh</a>
+        <div id="admin_shellserver_node">Text</div>
+        </div>
+    </fieldset>
+    {% endifequal %}
+    
+    
+<fieldset class="debugfield">
+<a href="http://www.djangoproject.com/" style="float:left;">powered by Django &copy;</a>
+
+<b id="renderTime" class="debugtext"></b>
+</fieldset>
+</div>
+<script type="text/javascript">
+// <![CDATA[
+if (!window.$) {
+		window.$ = function(id) { return document.getElementById(id); }
+	}
+	Sortable.create('thelist1',{containment:['thelist1','thelist2'], dropOnEmpty:true});
+	Sortable.create('thelist2',{containment:['thelist1','thelist2'], dropOnEmpty:true});
+	//var t = new Date().getTime();
+
+
+	var myBorder = RUZEE.ShadedBorder.create({ corner:7, shadow:22 });
+    var myBorder2 = RUZEE.ShadedBorder.create({ corner:7, shadow:22 });
+	var shadowedBorder    = RUZEE.ShadedBorder.create({ corner:7, shadow:22 });
+	var splitFormTop    = RUZEE.ShadedBorder.create({ corner:10, edges:"tlr" });
+	var splitFormBottom = RUZEE.ShadedBorder.create({ corner:10, edges:"blr" });
+	var transBorder       = RUZEE.ShadedBorder.create({ corner:8, shadow:22, border:2, borderOpacity:0.8 });
+	var tabBorder         = RUZEE.ShadedBorder.create({ corner:8, edges:"tlr", border:1 });
+	var partialIDs = ["tl", "tr", "bl", "br", "tlr", "blr", "tbl", "tbr"];
+	//var partialBorders = {};
+	//for (var i=0; i<partialIDs.length; ++i) {
+	//	partialBorders[partialIDs[i]] = RUZEE.ShadedBorder.create({
+        //corner:10, border:2, edges:partialIDs[i] });
+	//}
+	//var calcTime = "Calculation time: " + ((new Date().getTime() - t) / 1000.0) + "s";
+	shadowedBorder.render('shadowed-border');
+	myBorder.render('my-border');
+    myBorder2.render('my-border2');
+	
+    splitFormBottom.render($('split').getElementsByTagName('div')[0]);
+    splitFormTop.render($('split').getElementsByTagName('h3')[0]);
+	for (id in partialBorders) {
+		partialBorders[id].render(id);
+}
+// ]]>
+</script>
+</body>
+</html>
