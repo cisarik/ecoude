@@ -1,1 +1,3 @@
 # ecoude
+
+The goal is to create single online integrated development enviroment for several soft computing/ evolution inspired frameworks written in various languages. Collect problems which are ideal for evolutionary algorithms or problems which arent solved by them yet. Users can share ideas, todos, links of problems or projects and also share source codes by creating public projects. Build process of projects is fully automatic and all activity is handled by server. It's possible to monitor progress of evolutionary algorithms, catch best solutions and save them as outputs to manage statistical information of projects. Ecoude was created to make programming of evolutionary algorithms by multiple public available frameworks easier.
